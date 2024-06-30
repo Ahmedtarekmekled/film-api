@@ -2,20 +2,19 @@ let movieNameRef = document.getElementById("movie-name");
 let searchBtn = document.getElementById("searchBtn");
 let result = document.getElementById("result");
 
+let getMovie = () => {
+  let movieName = movieNameRef.value;
+  let url = `https://www.omdbapi.com/?t=${movieName}&apikey=90be555d`;
+  // let url = `http://www.omdbapi.com/?t=batman&apikey=90be555d`;
 
-let getMovie = () =>{
-    let movieName = movieNameRef.value ;
-    let url = `http://www.omdbapi.com/?t=${movieName}&apikey=90be555d`;
-
-    if(movieName.length <= 0){
-        result.innerHTML = `<h3 class="msg">Please enter a movie name.</h3>` ;
-    }
-
-    else{
-        fetch(url).then((resp) => resp.json()).then((data) =>{
-
-            if(data.Response == "True"){
-                result.innerHTML = `
+  if (movieName.length <= 0) {
+    result.innerHTML = `<h3 class="msg">Please enter a movie name.</h3>`;
+  } else {
+    fetch(url)
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.Response == "True") {
+          result.innerHTML = `
                 <div class="info">
                 <img src=${data.Poster} class="poster">
                 <div>
@@ -38,21 +37,17 @@ let getMovie = () =>{
                 <p>${data.Plot}</p>
                  <h3>Cast:</h3>
                 <p>${data.Actors}</p>
-             `
-            }
+             `;
+        } else {
+          result.innerHTML = `<h3 class="msg">${data.error} </h3>`;
+        }
+      })
 
-            else{
-                result.innerHTML = `<h3 class="msg">${data.error} </h3>`
-            }
-
-        })
-
-        .catch(() =>{
-            result.innerHTML = `<h3 class="msg">Error Occred</h3>`;
-        })
-    }
-
+      .catch(() => {
+        result.innerHTML = `<h3 class="msg">Error Occred</h3>`;
+      });
+  }
 };
 
-searchBtn.addEventListener("click" , getMovie);
-window.addEventListener("load" , getMovie);
+searchBtn.addEventListener("click", getMovie);
+window.addEventListener("load", getMovie);
